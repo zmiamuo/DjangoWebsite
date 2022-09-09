@@ -154,11 +154,5 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""import environ
 
-env = environ.Env()
-
-# reading .env file
-environ.Env.read_env()"""
-
-YOUTUBE_API = 'AIzaSyBONSTCCJmCDXjakjN35yzuSoRYEgJuLrQ'
+YOUTUBE_API = 'ytbAPi'
