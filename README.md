@@ -5,11 +5,6 @@
 
 ---
 
-![search](https://user-images.githubusercontent.com/66017329/179422281-54ed81d2-7ed8-4f32-a8e0-dce719d803a8.PNG)
-
-![layout](https://user-images.githubusercontent.com/66017329/179422284-24092a78-f30c-4917-8b2f-35fe2f7d3f61.PNG)
-
-![notes](https://user-images.githubusercontent.com/66017329/179422291-00b416c4-5f4c-46cb-ade1-49b0bd682340.PNG)
 
 ## How to run Studynotes
 
