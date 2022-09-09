@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ytb Notes</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static "snotes/assets/apple-touch-icon.png" %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static "snotes/assets/favicon-32x32.png" %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static "snotes/assets/favicon-16x16.png" %}">
+
+        <!-- Static -->
+        <link rel="stylesheet" type="text/css" href="{% static '/snotes/style.css' %}">
+        <script src="{% static "/snotes/index.js" %}"></script>
+
+        <!-- Link and Script for QuillJS -->
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        {{ form.media }}
+    </head>
+
+    <body>
+        <nav class="bg-indigo-800 sticky top-0 z-50 shadow-md">
+            <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+                <div class="relative flex items-center justify-between h-16">
+                    <a href={% url 'index' %} class="hidden lg:block">
+                        <img class="pl-8 h-8 w-auto" src="{% static 'snotes/assets/logowhite.svg' %}" alt="logoStudynotes">
+                    </a>
+                    <!-- Mobile menu button-->
+                    <div class="absolute inset-y-0 left-0 flex items-center md:hidden">
+                        <button id="mobile-button" type="button" class="m-3 text-white p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <a href={% url 'index' %}>
+                            <img class="pl-8 h-8 w-auto" src="{% static 'snotes/assets/logowhite.svg' %}" alt="logoStudynotes">
+                        </a>
+                    </div>
+                
+                    <!-- Desktop Nav Bar -->
+                    <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+                        <div class="hidden md:block">
+                            <div class="flex mx-12 space-x-4 text-base font-medium">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'create' %}" class="text-lg tracking-wide text-indigo-200 hover:text-white transition ease-in duration-200 px-3 py-2 rounded-md font-mono">NEW NOTE</a>
+                                <a href="{% url 'notes' user.id %}" class="text-lg tracking-wide text-indigo-200 hover:text-white transition ease-in duration-200 px-3 py-2 rounded-md font-mono">MY NOTES</a>
+                                <a href="{% url 'calendar' %}" class="text-lg tracking-wide text-indigo-200 hover:text-white transition ease-in duration-200 px-3 py-2 rounded-md font-mono">MY CALENDAR</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if not user.is_authenticated %}
+                    <div class="hidden md:block sm:ml-6 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto font-medium">      
+                        <a href="{% url 'register' %}" class="text-lg font-mono px-6 py-2 font-medium text-indigo-200 transition ease-in duration-200 uppercase hover:text-white focus:outline-none">
+                            Sign Up
+                        </a>
+                        <a href="{% url 'login' %}" class="text-lg font-mono px-6 py-2 font-medium text-white border-white transition ease-in duration-200 uppercase rounded-full hover:bg-white hover:text-indigo-700 border-2">
+                            Log In
+                        </a>
+                    {% else %}
+                        <a class="hidden md:flex px-4 py-2 font-medium text-white border-white transition ease-in duration-200 uppercase rounded-full hover:bg-indigo-900 border-2 mx-6">
+                            <span class="">
+                                <svg class="svg-icon" viewBox="0 0 20 20">
+                                        <polygon fill="none" points="18.198,7.95 3.168,7.95 3.168,8.634 9.317,9.727 9.317,19.564 12.05,19.564 12.05,9.727 18.198,8.634 "></polygon>
+                                        <path fill="none" d="M2.485,10.057v-3.41H2.473l0.012-4.845h1.366c0.378,0,0.683-0.306,0.683-0.683c0-0.378-0.306-0.683-0.683-0.683H1.119c-0.378,0-0.683,0.306-0.683,0.683c0,0.378,0.306,0.683,0.683,0.683h0.683v4.845C1.406,6.788,1.119,7.163,1.119,7.609v2.733c0,0.566,0.459,1.025,1.025,1.025c0.053,0,0.105-0.008,0.157-0.016l-0.499,5.481l5.9,2.733h0.931C8.634,13.266,5.234,10.458,2.485,10.057z"></path>
+                                        <path fill="none" d="M18.169,6.584c-0.303-3.896-3.202-6.149-7.486-6.149c-4.282,0-7.183,2.252-7.484,6.149H18.169z M15.463,3.187c0.024,0.351-0.103,0.709-0.394,0.977c-0.535,0.495-1.405,0.495-1.94,0c-0.29-0.268-0.418-0.626-0.394-0.977C13.513,3.827,14.683,3.827,15.463,3.187z"></path>
+                                        <path fill="none" d="M18.887,10.056c-2.749,0.398-6.154,3.206-6.154,9.508h0.933l5.899-2.733L18.887,10.056z"></path>
+                                </svg>
+                            </span>
+                            <span class="tracking-wide text-lg px-6 font-mono">{{ user.username|upper }}</span>
+                        <a>
+                        <a href="{% url 'logout' %}" class="hidden md:flex text-lg font-mono px-6 py-2 font-medium text-white border-white transition ease-in duration-200 uppercase rounded-full hover:bg-white hover:text-indigo-700 border-2">
+                            Log Out
+                        </a>
+                    {% endif %}
+                    </div>
+            </div>
+
+            <!-- Mobile Nav -->
+            <div class="hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                  <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'create' %}" class="text-white hover:bg-indigo-900 block px-3 py-2 rounded-md text-base font-medium" aria-current="page">New Note</a>
+                  <a href="{% url 'notes' user.id %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">My Notes</a>
+                  <a href="{% url 'calendar' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">My Calendar</a>
+                  {% endif %}
+                  {% if not user.is_authenticated %}
+                  <a href="{% url 'register' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Sign In</a>
+                  <a href="{% url 'login' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Log In</a>
+                  {% else %}
+                  <a href="{% url 'logout' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Log out</a>
+                  {% endif %}
+                </div>
+            </div>
+            
+        </nav>
+
+        <div>
+            {% block body %}
+            {% endblock %}
+        </div>
+    </body>
+
+    <footer class="relative bottom-0 bg-indigo-800 w-full h-64 py-8">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <div class="pt-8 flex max-w-xs mx-auto items-center justify-between">
+                <a href="https://github.com/zmiamuo" target="_blank" class="text-indigo-50 font-normal hover:text-indigo-300 dark:hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="text-xl hover:text-indigo-400 dark:hover:text-white transition-colors duration-200" viewBox="0 0 1792 1792">
+                        <path d="M896 128q209 0 385.5 103t279.5 279.5 103 385.5q0 251-146.5 451.5t-378.5 277.5q-27 5-40-7t-13-30q0-3 .5-76.5t.5-134.5q0-97-52-142 57-6 102.5-18t94-39 81-66.5 53-105 20.5-150.5q0-119-79-206 37-91-8-204-28-9-81 11t-92 44l-38 24q-93-26-192-26t-192 26q-16-11-42.5-27t-83.5-38.5-85-13.5q-45 113-8 204-79 87-79 206 0 85 20.5 150t52.5 105 80.5 67 94 39 102.5 18q-39 36-49 103-21 10-45 15t-57 5-65.5-21.5-55.5-62.5q-19-32-48.5-52t-49.5-24l-20-3q-21 0-29 4.5t-5 11.5 9 14 13 12l7 5q22 10 43.5 38t31.5 51l10 23q13 38 44 61.5t67 30 69.5 7 55.5-3.5l23-4q0 38 .5 88.5t.5 54.5q0 18-13 30t-40 7q-232-77-378.5-277.5t-146.5-451.5q0-209 103-385.5t279.5-279.5 385.5-103zm-477 1103q3-7-7-12-10-3-13 2-3 7 7 12 9 6 13-2zm31 34q7-5-2-16-10-9-16-3-7 5 2 16 10 10 16 3zm30 45q9-7 0-19-8-13-17-6-9 5 0 18t17 7zm42 42q8-8-4-19-12-12-20-3-9 8 4 19 12 12 20 3zm57 25q3-11-13-16-15-4-19 7t13 15q15 6 19-6zm63 5q0-13-17-11-16 0-16 11 0 13 17 11 16 0 16-11zm58-10q-2-11-18-9-16 3-14 15t18 8 14-14z">
+                        </path>
+                    </svg>
+                </a>
+                <img class="h-8 w-auto" src="{% static 'snotes/assets/logowhite.svg' %}" alt="logoStudynotes">
+                <a href="https://www.linkedin.com/in/oumaima-mhiriz/" target="_blank" class="text-indigo-50 font-normal hover:text-indigo-300 dark:hover:text-white transition-colors duration-200">
+                    <svg width="30" height="30" fill="currentColor" class="text-xl hover:text-indigo-400 dark:hover:text-white transition-colors duration-200" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+            <div class="text-center text-white font-normal text-sm pt-10 sm:pt-12 font-light flex items-center justify-center">
+               made with ♡ by Oumaima
+            </div>
+        </div>
+    </footer>
+</html>

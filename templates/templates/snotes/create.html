@@ -1,0 +1,49 @@
+{% extends "snotes/layout1.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="bg-white p-10 m-5 mb-52">
+        <div class="grid justify-items-center mb-8">
+            <p class="px-2 mb-3 text-center text-4xl font-black text-indigo-800 w-full">
+                New Note
+            </p>
+        </div>
+
+        <div class="flex justify-center mb-12">
+                <form method="POST" action="{% url 'create' %}" class="flex flex-col md:flex-row md:w-full  md:space-x-3  md:space-y-0 justify-center">
+                    {% csrf_token %}
+                    <div class="lg:w-96 md:w-auto sm:w-auto">
+                        <input type="text" name="search" autocomplete="off" class="shadow-md rounded-full border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent" placeholder="Enter video title"/>
+                    </div>
+                    <button class="flex-shrink-0 mt-2 px-6 py-2 text-base font-semibold text-white bg-indigo-700 rounded-full shadow-md hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-purple-200" type="submit">
+                        Search
+                    </button>
+                </form>
+        </div>
+
+        <div class="grid m-5 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {% for video in videos %}
+            <div class="overflow-hidden items-stretch h-full ring ring-indigo-700 shadow-lg rounded-lg h-70 w-60 md:w-80 cursor-pointer hover:opacity-90 m-auto max-h-70 mt-6" style="background-image: url({% static "snotes/assets/scattered.svg" %})">
+                <a href="{% url 'newnote' video.id %}">
+                    <img alt="thumbnail" src="{{ video.thumbnail }}" class="min-h-36 max-h-36 w-full object-cover"/>
+                    <div class="bg-origin-padding dark:bg-gray-800 w-full p-3 mt-3">
+                        <p class="font-bold text-white dark:text-white text-md font-medium mb-2">
+                            {{ video.title|truncatechars:60 }}
+                        </p>
+                        <p class="text-indigo-200 font-mono font-medium text-xs uppercase">
+                            CHANNEL : {{ video.channel }} 
+                        </p>
+                        <div class="flex flex-wrap justify-starts items-center mt-4">
+                            <a href="{% url 'newnote' video.id %}" class="text-xs font-mono mr-2 py-1.5 px-4 text-white bg-gradient-to-r from-blue-500 to-green-600 rounded-2xl hover:from-blue-600 hover:to-indigo-500">
+                                Take Notes
+                            </a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "snotes/layout1.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="header flex items-end justify-between mt-16 mx-16">
+        <div class="title">
+            <p class="px-4 text-4xl font-extrabold text-indigo-800">
+                My Schedule
+            </p>
+        </div>
+    </div>
+    
+    <div class="bg-white p-10 mx-3 my-5 mb-16">
+        <div class="grid m-5 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div id="note_squeleton" class="grid grid-cols-1 overflow-hidden bg-indigo-500 bg-origin-padding shadow-md rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
+                <div class="w-full block h-full dark:bg-gray-800 p-3" style="height:18rem;">
+                    <form method="POST" action="{% url "calendar" %}">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            {{ form.date }}
+                        </div>
+                        <div class="mb-2">
+                            {{ form.esubject }}
+                        </div>
+                        <div class="mb-2">
+                            {{ form.details }}
+                        </div>
+                        <div class="mb-2">
+                            {{ form.theme }}
+                        </div>
+                        <button type="submit" class="text-md font-mono mb-3 py-1 border-2 px-3 bg-indigo-700  text-white rounded-full hover:bg-indigo-800 hover:text-white shadow-sm hover:border-white0">
+                            Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% for event in events %}
+            <div id="note_squeleton" class="grid grid-cols-1 overflow-hidden bg-{{ event.theme }}-500 bg-origin-padding shadow-md rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
+                <div class="w-full block h-full dark:bg-gray-800 p-5" style="height:18rem;">
+                        <div class="w-full">
+                            <div class="font-normal font-mono mb-3 py-1 border-2 px-9 text-white bg-{{ event.theme }}-700 rounded-full hover:text-white shadow-sm hover:border-white">
+                                {{ event.date }}
+                            </div>
+                            <a href="#">
+                                <p class="mt-6 mb-6 text-white text-2xl font-bold dark:text-white font-medium mb-2">
+                                    {{ event.esubject }}
+                                </p>
+                                <p class="mb-9 font-normal text-{{ event.theme }}-100 text-md">
+                                    {{ event.details }}
+                                </p>
+                                <a href="{% url "deletevent" event.esubject %}" class="text-xs font-bold font-mono mb-3 py-1.5 border-2 px-4 text-{{event.theme}}-500 bg-white rounded-full hover:bg-{{ event.theme }}-500 hover:text-white shadow-sm hover:border-white">
+                                    Mark as done
+                                </a>
+                            </a>
+                        </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

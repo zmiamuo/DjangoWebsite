@@ -1,0 +1,82 @@
+{% extends "snotes/layout1.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="w-full bg-white p-12">
+
+        <div class="header flex items-end justify-between mb-12">
+            <div class="title">
+                <p class="px-6 text-4xl font-extrabold text-indigo-800 mb-4">
+                    {{ subject }}
+                </p>
+            </div>
+        </div>
+
+            <div class="grid grid-cols-1 m-5 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 overflow-hidden text-gray-50 bg-origin-padding shadow-md rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto hover:opacity-95">
+                        <a href="{% url 'create' %}" class="block h-full w-full bg-indigo-800 hover:bg-opacity-95 dark:bg-gray-800 p-4">
+                            <div class="flex justify-center">
+                                <p class="text-white p-10 text-7xl">
+                                    <svg class="svg-icon" viewBox="0 0 20 20">
+                                        <path fill="none" d="M13.388,9.624h-3.011v-3.01c0-0.208-0.168-0.377-0.376-0.377S9.624,6.405,9.624,6.613v3.01H6.613c-0.208,0-0.376,0.168-0.376,0.376s0.168,0.376,0.376,0.376h3.011v3.01c0,0.208,0.168,0.378,0.376,0.378s0.376-0.17,0.376-0.378v-3.01h3.011c0.207,0,0.377-0.168,0.377-0.376S13.595,9.624,13.388,9.624z M10,1.344c-4.781,0-8.656,3.875-8.656,8.656c0,4.781,3.875,8.656,8.656,8.656c4.781,0,8.656-3.875,8.656-8.656C18.656,5.219,14.781,1.344,10,1.344z M10,17.903c-4.365,0-7.904-3.538-7.904-7.903S5.635,2.096,10,2.096S17.903,5.635,17.903,10S14.365,17.903,10,17.903z"></path>
+                                    </svg>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    {% for note in notes %} 
+                    <div id="note_squeleton" class="grid grid-cols-1 overflow-hidden text-gray-100 bg-origin-padding shadow-md rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto hover:opacity-95" style="background-image: url({% static "snotes/assets/confetti-doodles.svg" %})">
+                        <div href="{% url 'note' note.id %}" class="w-full block h-full dark:bg-gray-800" style="height: 15rem;">
+                            <div class="flex flex-wrap justify-starts items-center mt-4">
+                                <a href="{% url 'subject' note.subject %}" class="text-xs font-mono mx-3 mr-2 py-1.5 px-4 text-white bg-gradient-to-r from-blue-500 to-green-600 rounded-2xl hover:from-blue-600 hover:to-indigo-500">
+                                    {{ note.subject }}
+                                </a>
+                            </div>
+                            <div class="w-full p-4">
+                                <a href="{% url 'note' note.id %}">
+                                    <p class="text-white font-bold dark:text-white text-xl font-medium mb-2">
+                                        {{ note.title }}
+                                    </p>
+                                    <p class="font-light text-indigo-200 text-md">
+                                        {{ note.body.html|safe|truncatechars:156 }}
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        {% comment %} <div class="grid gap-10 mb-3">
+                                <ul class="flex flex-row justify-center items-center">
+                                    <li id="blue" class="mr-4 last:mr-0">
+                                        <span class="block p-1 border-2 border-blue-500 rounded-full transition ease-in duration-300">
+                                            <a href="#blue" value="blue" class="block w-6 h-6 bg-blue-500 rounded-full">
+                                            </a>
+                                        </span>
+                                    </li>
+                                    <li id="yellow" value="yellow" class="mr-4 last:mr-0">
+                                        <span class="block p-1 border-2 border-yellow-300 hover:border-yellow-500 rounded-full transition ease-in duration-300">
+                                            <a href="#yellow" value="yellow" class="block w-6 h-6 bg-yellow-500 rounded-full">
+                                            </a>
+                                        </span>
+                                    </li>
+                                    <li id="red" class="mr-4 last:mr-0">
+                                        <span class="block p-1 border-2 border-red-300 hover:border-red-500 rounded-full transition ease-in duration-300">
+                                            <a href="#red" value="red" class="block w-6 h-6 bg-red-500 rounded-full">
+                                            </a>
+                                        </span>
+                                    </li>
+                                    <li id="green" *class="mr-4 last:mr-0">
+                                        <span class="block p-1 border-2 border-green-300 hover:border-green-500 rounded-full transition ease-in duration-300">
+                                            <a href="#green" value="green" class="block w-6 h-6 bg-green-500 rounded-full">
+                                            </a>
+                                        </span>
+                                    </li>
+                                </ul>
+                        </div> {% endcomment %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

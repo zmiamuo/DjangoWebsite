@@ -1,0 +1,148 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ytb Notes</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Static -->
+        <link rel="stylesheet" type="text/css" href="{% static '/snotes/style.css' %}">
+        <script src="{% static "/snotes/index.js" %}"></script>
+
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static "snotes/assets/apple-touch-icon.png" %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static "snotes/assets/favicon-32x32.png" %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static "snotes/assets/favicon-16x16.png" %}">
+
+        <!-- Link and Script for QuillJS -->
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        {{ form.media }}
+    </head>
+
+    <body>
+        <nav class="md:hidden bg-indigo-800 sticky top-0 z-50 shadow-md">
+            <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+                <div class="relative flex items-center justify-between h-16">
+                    <!-- Mobile menu button-->
+                    <div class="absolute inset-y-0 left-0 flex items-center md:hidden">
+                        <button id="mobile-button" type="button" class="m-3 text-white p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <a href={% url 'index' %}>
+                            <img class="pl-8 h-8 w-auto" src="{% static 'snotes/assets/logowhite.svg' %}" alt="logoStudynotes">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Nav -->
+            <div class="hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                {% if user.is_authenticated %}
+                <a href="{% url 'create' %}" class="text-white hover:bg-indigo-900 block px-3 py-2 rounded-md text-base font-medium" aria-current="page">New Note</a>
+                <a href="{% url 'notes' user.id %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">My Notes</a>
+                <a href="{% url 'calendar' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">My Calendar</a>
+                {% endif %}
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Sign In</a>
+                <a href="{% url 'login' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Log In</a>
+                {% else %}
+                <a href="{% url 'logout' %}" class="text-indigo-100 hover:bg-indigo-900 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Log out</a>
+                {% endif %}
+                </div>
+            </div>    
+        </nav>
+
+        <div class="hmin-h-screen flex bg-white">
+            <div class="hidden md:block flex justify-center flex-col bg-indigo-800 shadow-md sm:flex-row">
+                <div class="w-52">
+                    <div class="flex items-center justify-start mx-6 mt-10">
+                        <a href={% url 'index' %}>
+                            <img class="h-10" src="{% static 'snotes/assets/logowhite.svg' %}"/>
+                        </a>
+                    </div>
+                    <nav class="ml-2 mt-10 px-3">
+                        <a href="#" class="mt-9 ml-2 flex items-center transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-white dark:text-gray-400 rounded-lg">
+                            <span class="">
+                                <svg class="svg-icon" viewBox="0 0 20 20">
+                                        <polygon fill="none" points="18.198,7.95 3.168,7.95 3.168,8.634 9.317,9.727 9.317,19.564 12.05,19.564 12.05,9.727 18.198,8.634 "></polygon>
+                                        <path fill="none" d="M2.485,10.057v-3.41H2.473l0.012-4.845h1.366c0.378,0,0.683-0.306,0.683-0.683c0-0.378-0.306-0.683-0.683-0.683H1.119c-0.378,0-0.683,0.306-0.683,0.683c0,0.378,0.306,0.683,0.683,0.683h0.683v4.845C1.406,6.788,1.119,7.163,1.119,7.609v2.733c0,0.566,0.459,1.025,1.025,1.025c0.053,0,0.105-0.008,0.157-0.016l-0.499,5.481l5.9,2.733h0.931C8.634,13.266,5.234,10.458,2.485,10.057z"></path>
+                                        <path fill="none" d="M18.169,6.584c-0.303-3.896-3.202-6.149-7.486-6.149c-4.282,0-7.183,2.252-7.484,6.149H18.169z M15.463,3.187c0.024,0.351-0.103,0.709-0.394,0.977c-0.535,0.495-1.405,0.495-1.94,0c-0.29-0.268-0.418-0.626-0.394-0.977C13.513,3.827,14.683,3.827,15.463,3.187z"></path>
+                                        <path fill="none" d="M18.887,10.056c-2.749,0.398-6.154,3.206-6.154,9.508h0.933l5.899-2.733L18.887,10.056z"></path>
+                                </svg>
+                            </span>
+                            <span class="mx-6 text-md font-bold font-mono tracking-wide">
+                                {{ user.username|upper }}
+                            </span>
+                            <span class="flex-grow text-right">
+                            </span>
+                        </a>
+                        <a href="{% url 'create' %}" class="hover:bg-indigo-900 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-white dark:text-gray-400 rounded-lg ">
+                            <svg class="svg-icon" viewBox="0 0 20 20">
+							    <path fill="none" d="M19.404,6.65l-5.998-5.996c-0.292-0.292-0.765-0.292-1.056,0l-2.22,2.22l-8.311,8.313l-0.003,0.001v0.003l-0.161,0.161c-0.114,0.112-0.187,0.258-0.21,0.417l-1.059,7.051c-0.035,0.233,0.044,0.47,0.21,0.639c0.143,0.14,0.333,0.219,0.528,0.219c0.038,0,0.073-0.003,0.111-0.009l7.054-1.055c0.158-0.025,0.306-0.098,0.417-0.211l8.478-8.476l2.22-2.22C19.695,7.414,19.695,6.941,19.404,6.65z M8.341,16.656l-0.989-0.99l7.258-7.258l0.989,0.99L8.341,16.656z M2.332,15.919l0.411-2.748l4.143,4.143l-2.748,0.41L2.332,15.919z M13.554,7.351L6.296,14.61l-0.849-0.848l7.259-7.258l0.423,0.424L13.554,7.351zM10.658,4.457l0.992,0.99l-7.259,7.258L3.4,11.715L10.658,4.457z M16.656,8.342l-1.517-1.517V6.823h-0.003l-0.951-0.951l-2.471-2.471l1.164-1.164l4.942,4.94L16.656,8.342z"></path>
+						    </svg>
+                            <span class="mx-4 text-md font-bold font-mono">
+                                NEW NOTE
+                            </span>
+                            <span class="flex-grow text-right">
+                            </span>
+                        </a>
+                        <a href="{% url 'notes' user.id %}" class="hover:bg-indigo-900 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-indigo-900 duration-200  text-white dark:text-gray-100 rounded-lg bg-gray-indigo-600 dark:bg-gray-600">
+                            <svg class="svg-icon" viewBox="0 0 20 20">
+                                <path fill="none" d="M17.222,5.041l-4.443-4.414c-0.152-0.151-0.356-0.235-0.571-0.235h-8.86c-0.444,0-0.807,0.361-0.807,0.808v17.602c0,0.448,0.363,0.808,0.807,0.808h13.303c0.448,0,0.808-0.36,0.808-0.808V5.615C17.459,5.399,17.373,5.192,17.222,5.041zM15.843,17.993H4.157V2.007h7.72l3.966,3.942V17.993z"></path>
+                                <path fill="none" d="M5.112,7.3c0,0.446,0.363,0.808,0.808,0.808h8.077c0.445,0,0.808-0.361,0.808-0.808c0-0.447-0.363-0.808-0.808-0.808H5.92C5.475,6.492,5.112,6.853,5.112,7.3z"></path>
+                                <path fill="none" d="M5.92,5.331h4.342c0.445,0,0.808-0.361,0.808-0.808c0-0.446-0.363-0.808-0.808-0.808H5.92c-0.444,0-0.808,0.361-0.808,0.808C5.112,4.97,5.475,5.331,5.92,5.331z"></path>
+                                <path fill="none" d="M13.997,9.218H5.92c-0.444,0-0.808,0.361-0.808,0.808c0,0.446,0.363,0.808,0.808,0.808h8.077c0.445,0,0.808-0.361,0.808-0.808C14.805,9.58,14.442,9.218,13.997,9.218z"></path>
+                                <path fill="none" d="M13.997,11.944H5.92c-0.444,0-0.808,0.361-0.808,0.808c0,0.446,0.363,0.808,0.808,0.808h8.077c0.445,0,0.808-0.361,0.808-0.808C14.805,12.306,14.442,11.944,13.997,11.944z"></path>
+                                <path fill="none" d="M13.997,14.67H5.92c-0.444,0-0.808,0.361-0.808,0.808c0,0.447,0.363,0.808,0.808,0.808h8.077c0.445,0,0.808-0.361,0.808-0.808C14.805,15.032,14.442,14.67,13.997,14.67z"></path>
+						    </svg>
+                            <span class="mx-4 text-md font-bold font-mono">
+                                MY NOTES
+                            </span>
+                            <span class="flex-grow text-right">
+                            </span>
+                        </a>
+                        <a href="{% url 'calendar' %}" class="hover:bg-indigo-900 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-white dark:text-gray-400 rounded-lg ">
+                            <svg class="svg-icon" viewBox="0 0 20 20">
+							<path fill="none" d="M18.807,0.337h-3.616v1.808c0,0.475-0.384,0.859-0.859,0.859c-0.474,0-0.859-0.384-0.859-0.859V0.337H6.731
+							v1.808c0,0.475-0.384,0.859-0.859,0.859c-0.474,0-0.859-0.384-0.859-0.859V0.337h-3.82c-0.474,0-0.859,0.384-0.859,0.859v17.61
+							c0,0.477,0.384,0.859,0.859,0.859h17.613c0.474,0,0.859-0.382,0.859-0.859V1.195C19.665,0.721,19.281,0.337,18.807,0.337z
+							 M17.948,17.946H2.052V4.528h15.896V17.946z"></path>
+						    </svg>
+                            <span class="mx-4 text-md font-bold font-mono">
+                                MY CALENDAR
+                            </span>
+                            <span class="flex-grow text-right">
+                            </span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            <div>
+                {% block body %}
+                {% endblock %}
+
+                <footer class="bottom-0 px-4 py-6">
+                    <p class="text-sm font-normal text-gray-600 text-center">© CS50 FINAL PROJECT : Studynotes by Hamza EL BELGHITI | 2021</p>
+                </footer>
+            </div>
+        </div>
+
+    </body>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="{% static "/snotes/index.js" %}"></script>
+
+</html>
